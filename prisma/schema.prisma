@@ -19,4 +19,96 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+  ships     Ship[]
+  voyages   Voyage[]
+  @@map("users")
+}
+
+model Ship {
+  id        String   @id @default(uuid())
+  name      String
+  engine    String
+  capacity  Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  voyages   Voyage[]
+  fuelLogs  FuelLog[]
+  maintenanceRecords  MaintenanceRecord[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("ships")
+}
+
+model Voyage {
+  id        String   @id @default(uuid())
+  name      String
+  origin    String
+  destination String
+  departureDate DateTime
+  arrivalTime DateTime
+  distance   Float
+  cargoWeight        Float
+  cargoType          String?
+  weatherSeverity    Float
+  windSpeed          Float
+  predictedFuel      Float?
+  predictedDuration  Float?
+  optimalSpeed       Float?
+  actualFuel         Float?
+  actualDuration     Float?
+  deviations         String?
+  fuelLogs          FuelLog[]
+  feedBacks          VoyageFeedback[]
+  createdAt         DateTime @default(now())
+  shipId            String
+  ship              Ship     @relation(fields: [shipId], references: [id])
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  @@map("voyages")
+}
+
+model VoyageFeedback {
+  id        String   @id @default(uuid())
+  voyageId  String
+  fuelAccuracy Float? // percentage accuracy of fuel prediction
+  durationAccuracy Float? // percentage accuracy of duration prediction
+  routeOptimizationScore Int? // score for route optimization
+  totalScoreOfVoyage Int? // overall score for the voyage (1-100 scale) to help the next voyage for the same ship
+  notes     String? // additional notes or comments
+  voyage    Voyage   @relation(fields: [voyageId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("voyage_feedback")
+}
+
+model FuelLog {
+  id        String   @id @default(uuid())
+  timestamp DateTime @default(now())
+  fuelType  String   // e.g., "diesel", "biodiesel", "petrol"
+  fuelQuantity  Float    // in liters
+  cost      Float    // INR
+  notes     String?  // optional notes about the fuel log
+  shipId    String
+  ship      Ship     @relation(fields: [shipId], references: [id])
+  createdAt DateTime @default(now())
+  voyageId  String
+  voyage    Voyage?  @relation(fields: [voyageId], references: [id])
+  userId    String
+  updatedAt DateTime @updatedAt
+  @@map("fuel_logs")
+}
+
+model MaintenanceRecord {
+  id            String   @id @default(uuid())
+  description   String
+  cost          Float    // INR
+  maintainedAt  DateTime @default(now())
+  nextDue       DateTime?
+  score          Int       // 1-100 scale
+  shipId       String
+  ship         Ship     @relation(fields: [shipId], references: [id])
+  createdAt    DateTime @default(now())
+  userId      String
+  updatedAt   DateTime @updatedAt
+  @@map("maintenance_records")
 }
