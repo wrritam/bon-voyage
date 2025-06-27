@@ -1,12 +1,17 @@
 {
-  "name": "connexLabs",
+  "name": "bon-voyage",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset --force",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
