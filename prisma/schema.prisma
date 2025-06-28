@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -27,7 +21,6 @@ model User {
 model Ship {
   id        String   @id @default(uuid())
   name      String
-  engine    String
   capacity  Int
   userId    String
   user      User     @relation(fields: [userId], references: [id])
@@ -42,24 +35,35 @@ model Ship {
 model Voyage {
   id        String   @id @default(uuid())
   name      String
+
+  // voyage details
   origin    String
   destination String
+  distance   Float // distance in kilometers o to d
   departureDate DateTime
   arrivalTime DateTime
-  distance   Float
   cargoWeight        Float
   cargoType          String?
+
+  // weather conditions
   weatherSeverity    Float
   windSpeed          Float
-  predictedFuel      Float?
+
+  // ai predictions
+  predictedFuelUsage      Float?
   predictedDuration  Float?
   optimalSpeed       Float?
-  actualFuel         Float?
-  actualDuration     Float?
-  deviations         String?
+  speedSchedule       Json?
+
   fuelLogs          FuelLog[]
-  feedBacks          VoyageFeedback[]
+
+  // actual data and feedback here
+  feedbacks          VoyageFeedback[]
+
   createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relationships
   shipId            String
   ship              Ship     @relation(fields: [shipId], references: [id])
   userId            String
@@ -70,11 +74,17 @@ model Voyage {
 model VoyageFeedback {
   id        String   @id @default(uuid())
   voyageId  String
-  fuelAccuracy Float? // percentage accuracy of fuel prediction
-  durationAccuracy Float? // percentage accuracy of duration prediction
+
+  //same as the Voyage model
+  actualFuelUsage         Float? // per the voyage
+  actualDuration     Int? // per voyage
+
+  //deviations and score for continuous learning purposes
+
+  fuelAccuracy       Float? // in percentage per voyage
+  durationAccuracy   Float? // in percentage per voyage
   routeOptimizationScore Int? // score for route optimization
-  totalScoreOfVoyage Int? // overall score for the voyage (1-100 scale) to help the next voyage for the same ship
-  notes     String? // additional notes or comments
+
   voyage    Voyage   @relation(fields: [voyageId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -84,31 +94,34 @@ model VoyageFeedback {
 model FuelLog {
   id        String   @id @default(uuid())
   timestamp DateTime @default(now())
-  fuelType  String   // e.g., "diesel", "biodiesel", "petrol"
-  fuelQuantity  Float    // in liters
-  cost      Float    // INR
-  notes     String?  // optional notes about the fuel log
+
+  fuelType  String   // "diesel", "petrol"
+  fuelUsage  Float    // total is actualFuelUsage in voyagefeedback
+  fuelCost      Float    // INR fuelType* cost per liter [ petrol => 105/litre, diesel => 90/litre ]
+
   shipId    String
   ship      Ship     @relation(fields: [shipId], references: [id])
   createdAt DateTime @default(now())
   voyageId  String
   voyage    Voyage?  @relation(fields: [voyageId], references: [id])
-  userId    String
   updatedAt DateTime @updatedAt
   @@map("fuel_logs")
 }
 
 model MaintenanceRecord {
   id            String   @id @default(uuid())
-  description   String
-  cost          Float    // INR
+
+  //whenever i use the hit the get req /maintenance-alert/:shipId ig lol
   maintainedAt  DateTime @default(now())
-  nextDue       DateTime?
-  score          Int       // 1-100 scale
+
+  //everything ai model generated
+  description   String?
+  nextDue       DateTime? // next maintenance date (6 - 12 months after maintainedAt)
+  voyageReadyDate DateTime? // after maintenance (usually after 10 - 15 days)
+  score          Int       // 1-5 [more the score better the ship]
   shipId       String
   ship         Ship     @relation(fields: [shipId], references: [id])
   createdAt    DateTime @default(now())
-  userId      String
   updatedAt   DateTime @updatedAt
   @@map("maintenance_records")
 }
