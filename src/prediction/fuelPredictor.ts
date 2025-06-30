@@ -13,6 +13,10 @@ let model: tf.Sequential | null = null;
 
 export async function trainFuelModel() {
   const data = await getDataForFuelTraining();
+
+  if (data.length === 0) {
+    throw new Error("Not enough data to train the fuel prediction model.");
+  }
   try {
     const inputs = tf.tensor2d(
       data.map((d) => [
@@ -84,7 +88,8 @@ export async function trainFuelModel() {
       accuracy: parseFloat(accuracy.toFixed(4)),
     };
   } catch (error: any) {
-    console.log(error.message);
+    console.log("Error during route model training: ", error.message);
+    throw error;
   }
 }
 
@@ -99,5 +104,10 @@ export async function fuelUsagePrediction(input: inputFuelPrediction) {
   const prediction = model.predict(inputs) as tf.Tensor;
 
   const output = await prediction.array();
+
+  //clean up
+  inputs.dispose();
+  prediction.dispose();
+
   return parseFloat((output as number[][])[0][0].toFixed(2));
 }
