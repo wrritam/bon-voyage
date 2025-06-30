@@ -129,6 +129,8 @@ model AIModel {
   id          String   @id @default(uuid())
   modelType   String   // "route_optimizer", "fuel_predictor", "maintenance_forecaster"
   version     String
+  parameters  Json // store model weights/hyperparameters
+  accuracy    Float? 
   trainedAt   DateTime @default(now())
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
