@@ -17,7 +17,7 @@ interface inputRouteTraining {
 }
 
 export async function getDataForFuelTraining(): Promise<inputFuelTraining[]> {
-  const redayToTrainVoyages = await prisma.voyage.findMany({
+  const readyToTrainVoyages = await prisma.voyage.findMany({
     include: {
       feedbacks: true,
     },
@@ -32,7 +32,7 @@ export async function getDataForFuelTraining(): Promise<inputFuelTraining[]> {
     },
   });
 
-  return redayToTrainVoyages.flatMap((voyage) => {
+  return readyToTrainVoyages.flatMap((voyage) => {
     return voyage.feedbacks
       .filter((feedback) => feedback.actualFuelUsage !== null)
       .map((feedback) => ({

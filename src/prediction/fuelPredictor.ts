@@ -63,7 +63,7 @@ export async function trainFuelModel() {
     predictions.dispose();
     maeTensor.dispose();
 
-    console.log("Cuel model trained successfully");
+    console.log("Fuel model trained successfully");
 
     return {
       modelType: "fuel_predictor",
