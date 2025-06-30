@@ -1,20 +1,5 @@
 import prisma from "../configs/db";
-
-interface inputFuelTraining {
-  cargoWeight: number;
-  distance: number;
-  weatherSeverity: number;
-  windSpeed: number;
-  actualFuelUsage: number;
-}
-
-interface inputRouteTraining {
-  cargoWeight: number;
-  distance: number;
-  weatherSeverity: number;
-  windSpeed: number;
-  actualDuration: number;
-}
+import { inputFuelTraining, inputRouteTraining } from "../types/type";
 
 export async function getDataForFuelTraining(): Promise<inputFuelTraining[]> {
   const readyToTrainVoyages = await prisma.voyage.findMany({

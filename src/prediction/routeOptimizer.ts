@@ -1,22 +1,6 @@
 import * as tf from "@tensorflow/tfjs-node";
 import { getDataForRouteTraining } from "./dataProcessor";
-
-interface inputRouteOptimization {
-  cargoWeight: number;
-  distance: number;
-  weatherSeverity: number;
-  windSpeed: number;
-}
-
-interface outputRouteOptimization {
-  predictedDuration: number;
-  optimalSpeed: number;
-  speedSchedule: {
-    segment: number;
-    distance: string;
-    speed: string;
-  }[];
-}
+import { inputRouteOptimization, outputRouteOptimization } from "../types/type";
 
 let durationModel: tf.Sequential | null = null;
 let speedModel: tf.Sequential | null = null;

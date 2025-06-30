@@ -1,13 +1,7 @@
 import * as tf from "@tensorflow/tfjs-node";
 
 import { getDataForFuelTraining } from "./dataProcessor";
-
-interface inputFuelPrediction {
-  cargoWeight: number;
-  distance: number;
-  weatherSeverity: number;
-  windSpeed: number;
-}
+import { inputFuelPrediction } from "../types/type";
 
 let model: tf.Sequential | null = null;
 
