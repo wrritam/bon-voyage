@@ -15,6 +15,18 @@ export interface inputRouteTraining {
   actualDuration: number;
 }
 
+export interface MaintenanceTrainingInput {
+  totalVoyagesLast6M: number;
+  avgFuelUsagePerVoyage: number;
+  daysSinceLastMaint: number;
+}
+
+export interface MaintenanceTrainingLabel {
+  nextDueDays: number;
+  voyageReadyOffset: number;
+  score: number;
+}
+
 // for fuelPredictor.ts
 export interface inputFuelPrediction {
   cargoWeight: number;
@@ -40,4 +52,11 @@ export interface outputRouteOptimization {
     distance: string;
     speed: string;
   }[];
+}
+
+// for maintenance.ts
+export interface MaintenancePredictionOutput {
+  nextDue: number;
+  voyageReadyOffset: number;
+  score: number;
 }
