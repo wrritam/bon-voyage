@@ -108,6 +108,7 @@ async function main() {
         (predictedDuration / 24) * baseFuelRate * 1000
       ); // Convert to liters (1 ton ≈ 1000L)
 
+      // Calculate predicted arrival time
       const arrivalTime = new Date(
         departureDate.getTime() + predictedDuration * 3600000
       );

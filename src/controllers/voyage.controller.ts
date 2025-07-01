@@ -102,3 +102,85 @@ export const planVoyage = async (
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const planHistory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const voyages = await prisma.voyage.findMany({
+      include: {
+        feedbacks: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const historicalData = voyages.map((voyage) => {
+      const latestFeedback = voyage.feedbacks?.[voyage.feedbacks.length - 1];
+      return {
+        voyageId: voyage.id,
+        name: voyage.name,
+        origin: voyage.origin,
+        destination: voyage.destination,
+        distance: voyage.distance,
+        departureDate: voyage.departureDate,
+        predictedArrivalTime: voyage.arrivalTime,
+        predictedDuration: voyage.predictedDuration,
+        actualDuration: latestFeedback?.actualDuration || null,
+        predictedFuelUsage: voyage.predictedFuelUsage,
+        actualFuelUsage: latestFeedback?.actualFuelUsage || null,
+        optimalSpeed: voyage.optimalSpeed,
+        speedSchedule: voyage.speedSchedule,
+      };
+    });
+
+    res.status(200).json(historicalData);
+  } catch (error: any) {
+    console.error("Error in getting historical data:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const planHistoryByVoyageId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { voyageId } = req.params;
+
+  try {
+    const voyage = await prisma.voyage.findUnique({
+      where: { id: voyageId },
+      include: { feedbacks: true },
+    });
+
+    if (!voyage) {
+      res.status(404).json({ error: "Voyage not found" });
+      return;
+    }
+
+    const latestFeedback = voyage.feedbacks?.[voyage.feedbacks.length - 1];
+
+    const result = {
+      voyageId: voyage.id,
+      name: voyage.name,
+      origin: voyage.origin,
+      destination: voyage.destination,
+      distance: voyage.distance,
+      departureDate: voyage.departureDate,
+      arrivalTime: voyage.arrivalTime,
+      predictedFuelUsage: voyage.predictedFuelUsage,
+      actualFuelUsage: latestFeedback?.actualFuelUsage || null,
+      predictedDuration: voyage.predictedDuration,
+      actualDuration: latestFeedback?.actualDuration || null,
+      optimalSpeed: voyage.optimalSpeed,
+      speedSchedule: voyage.speedSchedule,
+    };
+
+    res.status(200).json(result);
+  } catch (err: any) {
+    console.error("Error in getting data:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
