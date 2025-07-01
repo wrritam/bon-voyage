@@ -1,4 +1,4 @@
-import * as tf from "@tensorflow/tfjs-node";
+import * as tf from "@tensorflow/tfjs";
 import { getDataForRouteTraining } from "./dataProcessor";
 import { inputRouteOptimization, outputRouteOptimization } from "../types/type";
 

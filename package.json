@@ -9,6 +9,7 @@
     "start": "node dist/server.js",
     "db:migrate": "prisma migrate dev",
     "seed": "tsx scripts/seed.ts",
+    "train": "tsx scripts/train.ts",
     "db:reset": "prisma migrate reset --force",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
