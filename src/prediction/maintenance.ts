@@ -58,7 +58,7 @@ export async function trainMaintenanceModel() {
   preds.dispose();
   mae.dispose();
 
-  console.log(" Maintenance Forecast model trained and saved.");
+  console.log("Maintenance Forecast model trained successfully.");
 
   return {
     modelType: "maintenance_forecaster",
@@ -84,7 +84,7 @@ export async function predictMaintenance(
 ): Promise<MaintenancePredictionOutput> {
   if (!model) throw new Error("Maintenance model not trained");
 
-  const imputs = tf.tensor2d([
+  const inputs = tf.tensor2d([
     [
       input.totalVoyagesLast6M,
       input.avgFuelUsagePerVoyage,
@@ -92,7 +92,7 @@ export async function predictMaintenance(
     ],
   ]);
 
-  const prediction = model.predict(imputs) as tf.Tensor;
+  const prediction = model.predict(inputs) as tf.Tensor;
   const predictionArray = (await prediction.array()) as number[][];
   const [nextDue, voyageReadyOffset, rawScore] = predictionArray[0];
 
