@@ -41,7 +41,6 @@ model Voyage {
   destination String
   distance   Float // distance in kilometers o to d
   departureDate DateTime
-  arrivalTime DateTime
   cargoWeight        Float
   cargoType          String?
 
@@ -54,6 +53,7 @@ model Voyage {
   predictedDuration  Float?
   optimalSpeed       Float?
   speedSchedule       Json?
+  arrivalTime DateTime
 
   fuelLogs          FuelLog[]
 
