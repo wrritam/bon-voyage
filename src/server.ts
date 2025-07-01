@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import { trainModels } from "./prediction/modelTrainer";
 import authRoutes from "./routes/auth.routes";
 import voyageRoutes from "./routes/voyage.route";
+import feedbackRoutes from "./routes/feedback.routes";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -24,6 +25,7 @@ trainModels()
 
 app.use("/auth", authRoutes);
 app.use("/voyage", voyageRoutes);
+app.use("/feedback", feedbackRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "bon voyage!" });
