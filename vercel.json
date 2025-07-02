@@ -2,17 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/index.js",
+      "src": "api/index.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["prisma/**/*"]
+        "includeFiles": ["prisma/**/*", "src/**/*"]
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/index.js",
+      "dest": "/api",
       "headers": {
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Origin": "*",
@@ -20,5 +20,13 @@
         "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
       }
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 30
+    }
+  }
 }
