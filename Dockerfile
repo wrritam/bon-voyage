@@ -2,7 +2,7 @@
 # base image
 FROM node:18-alpine
 
-# eork dir
+# work dir
 WORKDIR /app
 
 # copy packages and stuff
