@@ -13,7 +13,8 @@
     "db:reset": "prisma migrate reset --force",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "vercel-build": "prisma generate"
   },
   "keywords": [],
   "author": "",

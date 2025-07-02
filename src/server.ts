@@ -40,3 +40,5 @@ async function inToTheSea() {
 }
 
 inToTheSea();
+
+export default app;
