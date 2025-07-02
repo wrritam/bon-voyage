@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { trainModels } from "./prediction/modelTrainer";
 import authRoutes from "./routes/auth.routes";
@@ -13,8 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth", authRoutes);
 app.use("/voyage", voyageRoutes);
