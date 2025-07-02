@@ -43,7 +43,7 @@ export async function trainMaintenanceModel() {
     verbose: 0,
   });
 
-  // same calc
+  // accuracy calc
   const preds = model.predict(inputs) as tf.Tensor;
   const mae = tf.metrics.meanAbsoluteError(labels, preds);
   const maeVal = (await mae.data())[0];
@@ -52,7 +52,7 @@ export async function trainMaintenanceModel() {
     data.reduce((acc, d) => acc + d.nextDueDays, 0) / data.length;
   const accuracy = 1 - maeVal / avgLabel;
 
-  //clean up
+  // clean up
   inputs.dispose();
   labels.dispose();
   preds.dispose();
@@ -94,16 +94,29 @@ export async function predictMaintenance(
 
   const prediction = model.predict(inputs) as tf.Tensor;
   const predictionArray = (await prediction.array()) as number[][];
-  const [nextDue, voyageReadyOffset, rawScore] = predictionArray[0];
 
-  //clean up
+  let [nextDue, voyageReadyOffset, rawScore] = predictionArray[0];
+
+  // invalid preds fallback
+  if (!Number.isFinite(nextDue) || nextDue < 0) nextDue = 180;
+  if (!Number.isFinite(voyageReadyOffset) || voyageReadyOffset < 0)
+    voyageReadyOffset = 12;
+  if (!Number.isFinite(rawScore)) rawScore = 3;
+
+  const now = new Date();
+
+  const nextDueDate = new Date(now.getTime() + Math.round(nextDue) * 86400000);
+  const voyageReadyDate = new Date(
+    now.getTime() + Math.round(voyageReadyOffset) * 86400000
+  );
+
   inputs.dispose();
   prediction.dispose();
 
   return {
-    voyageReadyDate: null, // TODO: Replace with actual calculation if available
-    nextDue: Math.round(nextDue),
-    voyageReadyOffset: Math.round(voyageReadyOffset),
+    nextDue: nextDueDate,
+    voyageReadyDate,
+    voyageReadyOffset: voyageReadyDate,
     score: Math.min(5, Math.max(1, Math.round(rawScore))),
   };
 }
