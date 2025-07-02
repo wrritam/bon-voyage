@@ -21,8 +21,16 @@ RUN pnpm db:generate
 # build
 RUN pnpm build
 
+# copy entrypoint script
+COPY docker-entrypoint.sh .
+RUN apk add --no-cache dos2unix && dos2unix docker-entrypoint.sh && chmod +x docker-entrypoint.sh
+
 # expose port
 EXPOSE 3000
+
+# set entrypoint
+# Set entrypoint
+ENTRYPOINT ["./docker-entrypoint.sh"]
 
 # start
 CMD ["pnpm", "start"]
