@@ -101,6 +101,7 @@ export async function predictMaintenance(
   prediction.dispose();
 
   return {
+    voyageReadyDate: null, // TODO: Replace with actual calculation if available
     nextDue: Math.round(nextDue),
     voyageReadyOffset: Math.round(voyageReadyOffset),
     score: Math.min(5, Math.max(1, Math.round(rawScore))),

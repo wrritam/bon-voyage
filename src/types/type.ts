@@ -56,6 +56,7 @@ export interface outputRouteOptimization {
 
 // for maintenance.ts
 export interface MaintenancePredictionOutput {
+  voyageReadyDate: any;
   nextDue: number;
   voyageReadyOffset: number;
   score: number;
