@@ -189,34 +189,30 @@ The application includes three AI models that are automatically trained on start
 2. *Route Optimizer*: Optimizes routes considering weather and cargo constraints
 3. *Maintenance Forecaster*: Predicts maintenance needs based on usage patterns
 
-### Container Issues (I personally faced this problems)
+## Container Issues (I personally faced these problems)
 
-*Problem*: exec ./docker-entrypoint.sh: no such file or directory
-*Solution*: This is usually a line-ending issue. The Dockerfile includes dos2unix to handle this automatically.
+-*Problem*: exec ./docker-entrypoint.sh: no such file or directory
+-*Solution*: This is usually a line-ending issue. The Dockerfile includes dos2unix to handle this automatically.
 
-*Problem*: Cannot find module '/app/dist/server.js'
-*Solution*: Ensure you're not using volume mounts that override the built image in production.
+-*Problem*: Cannot find module '/app/dist/server.js'
+-*Solution*: Ensure you're not using volume mounts that override the built image in production.
 
-### Database Issues (I personally faced this problems)
-
-*Problem*: The table 'public.voyages' does not exist
-*Solution*: Run database migrations:
-bash
+-*Problem*: The table 'public.voyages' does not exist
+-*Solution*: Run database migrations:
+```bash
 docker-compose exec app pnpm db:push
+```
 
-
-*Problem*: Connection refused to PostgreSQL
-*Solution*: Ensure PostgreSQL container is running:
-bash
+-*Problem*: Connection refused to PostgreSQL
+-*Solution*: Ensure PostgreSQL container is running:
+```bash
 docker-compose up postgres -d
+```
 
-
-### Performance (I personally faced this problems)
-
-*Problem*: Slow AI model training
-*Solution*: The app includes TensorFlow.js CPU backend. For faster training, you can:
-- Use a machine with more CPU cores
-- The models train once on startup and save to disk
+-*Problem*: Slow AI model training
+-*Solution*: The app includes TensorFlow.js CPU backend. For faster training, you can:
+   - Use a machine with more CPU cores
+   - The models train once on startup and save to disk
 
 ---
 
