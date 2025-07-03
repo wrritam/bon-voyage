@@ -84,6 +84,9 @@ The API will be available at: http://localhost:4000
 ### Feedback
 - POST /feedback/provide-feedback - Submit voyage feedback
 
+## API Docs [Postman]
+- [Postman publised documentation for all the APIS](https://documenter.getpostman.com/view/21414570/2sB34bL46o)
+
 ## Development Setup
 
 For development with hot-reload and local debugging:
@@ -213,6 +216,24 @@ docker-compose up postgres -d
 -*Solution*: The app includes TensorFlow.js CPU backend. For faster training, you can:
    - Use a machine with more CPU cores
    - The models train once on startup and save to disk
+
+## How my system supports planning intelligence
+
+### This Project, Bon Voyage works with AI/ML to provide data oriented decision support for Marine Operations. 
+- #### Planning the voyage & Fuel Prediction: 
+  the ``/plan-voyage``  optimal speed and fuel consumption based on cargo weight, distance, and weather. This allows operators to plan cost-efficient and timely routes. A regression model forecasts fuel usage, enabling better refueling decisions and cost management.
+
+- #### Route Optimization:
+  The system estimates voyage duration and recommends a dynamic speed schedule across segments, improving ETA predictions and voyage efficiency.
+
+- #### Maintenance Forecasting:
+  Based on historical fuel logs and maintenance records, the system predicts the next due maintenance date, readiness time, and health score for each ship.
+
+- #### Continuous learning loop for more accurate datas:
+  With ```/feedback``` endpoints and model retraining schedules, the system evolves using real operational data, improving over time with usage.
+
+- #### Added AIModel:
+  For savimg each training model's version, accuracy and metadata for reliability.
 
 ---
 
