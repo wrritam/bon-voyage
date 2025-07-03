@@ -142,7 +142,6 @@ async function main() {
             })),
           },
           shipId: ship.id,
-          userId: ship.userId,
         },
       });
 

@@ -69,6 +69,7 @@ export const planVoyage = async (
     const newVoyage = await prisma.voyage.create({
       data: {
         shipId,
+        // Add userId here, you may need to get it from req.user or similar
         name,
         origin,
         destination,
@@ -83,7 +84,6 @@ export const planVoyage = async (
         predictedFuelUsage,
         optimalSpeed,
         speedSchedule,
-        userId: "03cd721a-211d-449a-b4d9-2975a1b9c5d4", //if use auth then update with req.user.userId
       },
     });
 
